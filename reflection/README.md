@@ -70,38 +70,6 @@ graph LR
   - 转换状态为 Markdown 格式
   - 支持状态查询和追溯
 
-## 工作流程
-
-```mermaid
-graph TD
-    A[开始] --> B[初始化Runner<br/>设置主题和循环次数]
-    B --> C[创建Actor和Critic实例]
-    C --> D[开始循环 cycle=0]
-    D --> E{是否为第一轮?}
-    
-    E -->|是| F[Actor生成初稿<br/>使用ACTOR_DRAFT提示词]
-    F --> G[StateManager保存<br/>initial_draft V0]
-    G --> H[Critic评审初稿<br/>使用CRITIC_REVIEW提示词]
-    H --> I[StateManager保存<br/>initial_review]
-    I --> J[cycle++]
-    
-    E -->|否| K[Actor修订草稿<br/>基于历史状态<br/>使用ACTOR_REVISE提示词]
-    K --> L[StateManager保存<br/>修订稿 V{cycle}]
-    L --> M[Critic修订评审<br/>基于历史状态<br/>使用CRITIC_REVISE提示词]
-    M --> N[StateManager保存<br/>修订评论 V{cycle}]
-    N --> J
-    
-    J --> O{cycle < num_cycles?}
-    O -->|是| E
-    O -->|否| P[生成最终Markdown报告]
-    P --> Q[结束]
-    
-    style F fill:#e1f5fe
-    style H fill:#f3e5f5
-    style K fill:#e1f5fe
-    style M fill:#f3e5f5
-```
-
 ## 详细流程说明
 
 ### 第一轮循环（初始化）
