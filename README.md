@@ -6,17 +6,6 @@
 
 一个展示智能代理工作流（Agentic Workflow）实际应用案例的项目集合。通过多个精心设计的案例，演示如何使用AI代理协作完成复杂任务，涵盖内容创作、信息检索、数据处理等多个领域。
 
-## 📋 目录
-
-- [项目概述](#-项目概述)
-- [案例列表](#-案例列表)
-- [快速开始](#-快速开始)
-- [环境配置](#-环境配置)
-- [项目结构](#-项目结构)
-- [技术栈](#-技术栈)
-- [贡献指南](#-贡献指南)
-- [许可证](#-许可证)
-
 ## 🎯 项目概述
 
 Agentic Workflow（智能代理工作流）是一种新兴的AI应用模式，通过多个专门化的AI代理协作，完成单个AI难以胜任的复杂任务。本项目收集并实现了多个典型的Agentic Workflow案例，每个案例都展示了不同的协作模式和应用场景。
@@ -186,28 +175,6 @@ agentic_workflow_case/
 └── logs/                        # 日志文件目录
 ```
 
-## 🛠️ 技术栈
-
-### 核心框架
-- **[Agently](https://github.com/Maplemx/Agently)**: AI代理开发框架
-- **Python**: 主要编程语言
-
-### AI服务
-- **豆包API**: 大语言模型服务
-- **SERP API**: 网络搜索服务
-
-### 工具库
-- **requests**: HTTP请求处理
-- **BeautifulSoup**: HTML解析
-- **loguru**: 日志管理
-- **python-dotenv**: 环境变量管理
-
-### 设计模式
-- **Actor-Critic模式**: 用于反思工作流
-- **Pipeline模式**: 用于网络搜索工作流
-- **Factory模式**: 用于代理创建
-- **Strategy模式**: 用于不同处理策略
-
 ## 🎨 案例特色
 
 ### Reflection Workflow 特色
@@ -352,7 +319,7 @@ if __name__ == "__main__":
 
 ## 🙏 致谢
 
-- [Agently](https://github.com/Maplemx/Agently) - 优秀的AI代理开发框架
+- [Agently](https://github.com/Maplemx/Agently) - 优秀的 AI agently 开发框架
 - [豆包](https://www.volcengine.com/product/doubao) - 强大的大语言模型服务
 - [SerpApi](https://serpapi.com/) - 可靠的搜索API服务
 
