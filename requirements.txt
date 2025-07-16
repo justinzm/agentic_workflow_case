@@ -1,0 +1,12 @@
+# Core AI Framework
+agently>=0.1.0
+
+# HTTP Requests and Web Scraping
+requests>=2.28.0
+beautifulsoup4>=4.11.0
+
+# Environment and Configuration
+python-dotenv>=0.19.0
+
+# Logging
+loguru>=0.6.0
