@@ -171,3 +171,10 @@ cython_debug/
 
 env
 .env
+
+test
+test/
+test/*
+
+*/data
+*/data/*

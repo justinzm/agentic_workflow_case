@@ -21,8 +21,8 @@ class WebSummarizeAgent:
         agent_factory = ChatModel().get_agent_factory()
         self.agent = agent_factory.create_agent()
 
-        self.INPUT_DIR = './data/output/scrape'
-        self.OUTPUT_DIR = './data/output/summarize'
+        self.INPUT_DIR = '../web_access/data/output/scrape'
+        self.OUTPUT_DIR = '../web_access/data/output/summarize'
 
     def _read_file(self, path: str) -> Optional[str]:
         """
@@ -118,6 +118,7 @@ class WebSummarizeAgent:
             )
             # Save the summary
             self._save_summary(summary, query)
+            return summary
         except Exception as e:
             logger.error(f"生成摘要错误: {e}")
             raise

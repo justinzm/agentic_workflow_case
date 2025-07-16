@@ -25,8 +25,8 @@ class WebScrapeAgent:
     负责从搜索结果中抓取网页内容的类。
     """
     def __init__(self):
-        self.INPUT_DIR = './data/output/search'
-        self.OUTPUT_DIR = './data/output/scrape'
+        self.INPUT_DIR = '../web_access/data/output/search'
+        self.OUTPUT_DIR = '../web_access/data/output/scrape'
         self.MAX_WORKERS = 5  # 最大线程数
 
     def generate_filename(self, query: str, extension: str) -> str:

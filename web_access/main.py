@@ -26,9 +26,9 @@ class WebAccess:
         初始化 WebAccess 类，设置日志记录器。
         """
         self._output_folders = [
-            './data/output/search',
-            './data/output/scrape',
-            './data/output/summarize'
+            '../web_access/data/output/search',
+            '../web_access/data/output/scrape',
+            '../web_access/data/output/summarize'
         ]
 
     def _flush_output_folders(self):
@@ -72,12 +72,12 @@ class WebAccess:
             WebScrapeAgent().run(query, location)
 
             logger.info("执行汇总任务")
-            WebSummarizeAgent().run(query)
-
+            summarize = WebSummarizeAgent().run(query)
+            return summarize
         except Exception as e:
             logger.error(f"执行期间发生错误: {str(e)}")
             raise
 
 
 if __name__ == "__main__":
-    res = WebAccess().run(query="特朗普是否来中国参加9.3阅兵", location="")
+    res = WebAccess().run(query="Leonardo DiCaprio", location="")

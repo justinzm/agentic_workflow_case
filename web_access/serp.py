@@ -20,7 +20,7 @@ from typing import Union, Tuple, Dict, Any
 
 
 # Static paths
-SEARCH_RESULTS_OUTPUT_DIR = './data/output/search'
+SEARCH_RESULTS_OUTPUT_DIR = '../web_access/data/output/search'
 
 class SerpAPIClient:
     """
@@ -82,7 +82,7 @@ def log_top_search_results(results: Dict[str, Any], top_n: int = 10) -> None:
         logger.info(f"  Snippet: {result.get('snippet')}")
         logger.info('-' * 100)
 
-def save_top_search_results_to_json(results: Dict[str, Any], output_path: str, top_n: int = 8) -> None:
+def save_top_search_results_to_json(results: Dict[str, Any], output_path: str, top_n: int = 3) -> None:
     """
     Saves the top N search results to a JSON file.
 
