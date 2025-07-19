@@ -177,7 +177,7 @@ asyncio.run(run(input_file, output_file, shard_size))
 ```python
 # 直接使用协调器
 from dynamic_sharding.coordinator import Coordinator
-from dynamic_sharding.message import Message
+from utils.message import Message
 
 coordinator = Coordinator("TestCoordinator")
 message = Message(

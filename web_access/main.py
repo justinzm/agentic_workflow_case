@@ -52,7 +52,7 @@ class WebAccess:
                 raise
 
 
-    def run(self, query: str, location: str = '') -> str:
+    def run(self, query: str, location: str = 'china') -> str:
         """
         依次执行以下流程：搜索、抓取和总结任务。
         Args:

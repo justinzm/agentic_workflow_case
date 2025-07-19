@@ -11,8 +11,8 @@
 import asyncio
 from typing import List
 from utils.logger import logger
+from utils.message import Message
 from web_access.main import WebAccess
-from dynamic_sharding.message import Message
 
 
 class Delegate:

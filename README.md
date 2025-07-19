@@ -4,15 +4,15 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Agently](https://img.shields.io/badge/Powered%20by-Agently-orange.svg)](https://github.com/Maplemx/Agently)
 
-一个展示智能代理工作流（Agentic Workflow）实际应用案例的项目集合。通过多个精心设计的案例，演示如何使用AI代理协作完成复杂任务，涵盖内容创作、信息检索、数据处理等多个领域。
+智能体工作流（Agentic Workflow）应用案例的项目集合。通过多个精心设计的案例，演示如何使用AI智能体协作完成复杂任务，涵盖内容创作、信息检索、数据处理等多个领域。
 
 ## 🎯 项目概述
 
-Agentic Workflow（智能代理工作流）是一种新兴的AI应用模式，通过多个专门化的AI代理协作，完成单个AI难以胜任的复杂任务。本项目收集并实现了多个典型的Agentic Workflow案例，每个案例都展示了不同的协作模式和应用场景。
+Agentic Workflow（智能体工作流）是一种新兴的AI应用模式，通过多个专门化的AI智能体协作，完成单个AI难以胜任的复杂任务。本项目收集并实现了多个典型的Agentic Workflow案例，每个案例都展示了不同的协作模式和应用场景。
 
 ### 核心特点
 
-- 🔄 **多代理协作**：展示不同代理间的协作模式
+- 🔄 **多智能体协作**：展示不同智能体间的协作模式
 - 🎨 **多样化场景**：涵盖内容创作、信息检索、数据分析等领域
 - 🛠️ **模块化设计**：每个案例都是独立的模块，易于理解和扩展
 - 📚 **详细文档**：每个案例都有完整的说明文档和使用指南
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
 ### 2. 🌐 Web Access Workflow - 智能网络搜索工作流
 
-基于多代理协作的网络信息检索和摘要生成系统，通过搜索、抓取、摘要三个代理的协作，实现从查询到摘要的完整信息处理流程。
+基于多智能体协作的网络信息检索和摘要生成系统，通过搜索、抓取、摘要三个智能体的协作，实现从查询到摘要的完整信息处理流程。
 
 **核心特性：**
 - 三阶段流水线处理
@@ -123,9 +123,9 @@ if __name__ == "__main__":
 
 ```mermaid
 graph LR
-    A[用户查询] --> B[搜索代理]
-    B --> C[抓取代理]
-    C --> D[摘要代理]
+    A[用户查询] --> B[搜索智能体]
+    B --> C[抓取智能体]
+    C --> D[摘要智能体]
     D --> E[结构化摘要]
 
     B --> F[SERP API]
@@ -189,13 +189,108 @@ if __name__ == "__main__":
     run_web_access_example()
 ```
 
-### 3. 🔀 Dynamic Sharding Workflow - 动态分片智能信息处理工作流
+### 3. 🎯 Semantic Router Workflow - 语义路由智能旅行规划工作流
 
-基于协调器-委托代理模式的动态分片信息处理系统，通过智能分片和异步并发处理，实现大量实体数据的批量信息获取和整合。
+基于语义路由和意图识别的智能旅行规划系统，通过协调器智能体和专业子智能体的协作，实现自然语言查询的智能路由和统一服务整合。
+
+**核心特性：**
+- 智能意图识别和语义路由
+- 多领域专业智能体协作
+- 统一的旅行服务整合
+- 自然语言查询处理
+
+**应用场景：**
+- 智能旅行助手和规划
+- 多服务统一入口平台
+- 客服机器人智能路由
+- 意图识别和分类系统
+
+#### 工作流程图
+
+```mermaid
+graph LR
+    A[用户查询] --> B[协调器智能体]
+    B --> C[意图识别]
+    C --> D{路由选择}
+
+    D -->|航班搜索| E[航班搜索智能体]
+    D -->|酒店搜索| F[酒店搜索智能体]
+    D -->|租车搜索| G[租车搜索智能体]
+    D -->|未知意图| H[错误处理]
+
+    E --> I[WebAccess调用]
+    F --> J[WebAccess调用]
+    G --> K[WebAccess调用]
+
+    I --> L[航班信息]
+    J --> M[酒店信息]
+    K --> N[租车信息]
+
+    L --> O[结果整合]
+    M --> O
+    N --> O
+    O --> P[综合响应]
+
+    style A fill:#e1f5fe
+    style P fill:#c8e6c9
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style E fill:#e8f5e8
+    style F fill:#e8f5e8
+    style G fill:#e8f5e8
+```
+
+**工作流程：**
+1. **查询接收**：用户提交自然语言旅行查询
+2. **意图识别**：协调器分析查询内容，识别用户意图（航班/酒店/租车）
+3. **智能路由**：根据识别的意图路由到相应的专业子智能体
+4. **信息获取**：子智能体优化查询并调用WebAccess获取相关信息
+5. **结果整合**：协调器整合子智能体结果，生成统一的综合响应
+
+#### 使用示例
+
+```python
+from semantic_router.main import SemanticRouter
+
+def run_semantic_router_example():
+    """运行语义路由工作流示例"""
+
+    # 创建语义路由器实例
+    router = SemanticRouter()
+
+    # 定义不同类型的旅行查询
+    queries = [
+        "你能推荐几家武汉汉阳的酒店我下周入住吗？",
+        "我想预订下周从北京到上海的航班",
+        "在广州租车一周大概多少钱？",
+        "帮我找找深圳性价比高的酒店"
+    ]
+
+    for query in queries:
+        print(f"\n处理查询：{query}")
+        print("-" * 50)
+
+        try:
+            # 执行语义路由和处理
+            response = router.run(query)
+            print(f"✅ 响应：{response}")
+
+        except Exception as e:
+            print(f"❌ 查询处理失败：{str(e)}")
+
+    print("\n所有查询处理完成！")
+
+if __name__ == "__main__":
+    run_semantic_router_example()
+```
+
+### 4. 🔀 Dynamic Sharding Workflow - 动态分片智能信息处理工作流
+
+基于协调器-委托智能体模式的动态分片信息处理系统，通过智能分片和异步并发处理，实现大量实体数据的批量信息获取和整合。
 
 **核心特性：**
 - 动态分片处理机制
-- 协调器-委托代理协作
+- 协调器-委托智能体协作
 - 异步并发优化
 - 智能信息获取集成
 
@@ -213,9 +308,9 @@ if __name__ == "__main__":
 graph LR
     A[实体列表] --> B[协调器]
     B --> C[动态分片]
-    C --> D[委托代理1]
-    C --> E[委托代理2]
-    C --> F[委托代理N]
+    C --> D[委托智能体1]
+    C --> E[委托智能体2]
+    C --> F[委托智能体N]
 
     D --> G[WebAccess]
     E --> H[WebAccess]
@@ -241,8 +336,8 @@ graph LR
 
 **工作流程：**
 1. **动态分片**：协调器根据配置将实体列表分割为多个分片
-2. **并发处理**：为每个分片创建委托代理，异步并发处理
-3. **信息获取**：每个委托代理调用WebAccess获取实体详细信息
+2. **并发处理**：为每个分片创建委托智能体，异步并发处理
+3. **信息获取**：每个委托智能体调用WebAccess获取实体详细信息
 4. **结果整合**：收集所有分片结果，生成完整的信息报告
 
 #### 使用示例
@@ -322,6 +417,10 @@ python main.py
 cd web_access
 python main.py
 
+# 运行语义路由工作流案例
+cd semantic_router
+python main.py
+
 # 运行动态分片工作流案例
 cd dynamic_sharding
 python main.py
@@ -367,24 +466,31 @@ agentic_workflow_case/
 ├── reflection/                  # 反思工作流案例
 │   ├── README.md               # 案例详细文档
 │   ├── main.py                 # 主程序入口
-│   ├── actor.py                # Actor代理实现
-│   ├── critic.py               # Critic代理实现
+│   ├── actor.py                # Actor智能体实现
+│   ├── critic.py               # Critic智能体实现
 │   ├── prompts.py              # 提示词定义
 │   └── data/                   # 数据存储目录
 ├── web_access/                  # 网络搜索工作流案例
 │   ├── README.md               # 案例详细文档
 │   ├── main.py                 # 主程序入口
-│   ├── search.py               # 搜索代理
-│   ├── scrape.py               # 抓取代理
-│   ├── summarize.py            # 摘要代理
+│   ├── search.py               # 搜索智能体
+│   ├── scrape.py               # 抓取智能体
+│   ├── summarize.py            # 摘要智能体
 │   ├── serp.py                 # 搜索API客户端
 │   ├── prompts.py              # 提示词定义
 │   └── data/                   # 数据存储目录
+├── semantic_router/             # 语义路由工作流案例
+│   ├── main.py                 # 主程序入口
+│   ├── coordinator.py          # 协调器智能体
+│   ├── hotel_search.py         # 酒店搜索智能体
+│   ├── flight_search.py        # 航班搜索智能体
+│   ├── car_rental_search.py    # 租车搜索智能体
+│   └── prompts.py              # 提示词定义
 ├── dynamic_sharding/            # 动态分片工作流案例
 │   ├── README.md               # 案例详细文档
 │   ├── main.py                 # 主程序入口
-│   ├── coordinator.py          # 协调器代理
-│   ├── delegate.py             # 委托代理
+│   ├── coordinator.py          # 协调器智能体
+│   ├── delegate.py             # 委托智能体
 │   ├── message.py              # 消息传递结构
 │   └── data/                   # 数据存储目录
 ├── test/                        # 测试文件目录

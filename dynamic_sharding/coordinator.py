@@ -11,7 +11,7 @@
 import asyncio
 from typing import List
 from utils.logger import logger
-from dynamic_sharding.message import Message
+from utils.message import Message
 from dynamic_sharding.delegate import Delegate
 
 

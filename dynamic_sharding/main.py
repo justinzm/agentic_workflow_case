@@ -10,7 +10,7 @@
 
 import asyncio
 from utils.logger import logger
-from dynamic_sharding.message import Message
+from utils.message import Message
 from dynamic_sharding.coordinator import Coordinator
 
 
