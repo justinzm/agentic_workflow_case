@@ -5,7 +5,7 @@
 # @mail    : 3907721@qq.com
 # @Time    : 2025/7/19 11:08
 # @File    : main
-# @desc    :
+# @desc    : 语义路由器主入口
 
 
 from typing import Union, List

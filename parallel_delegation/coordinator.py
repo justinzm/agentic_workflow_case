@@ -5,13 +5,13 @@
 # @mail    : 3907721@qq.com
 # @Time    : 2025/7/19 14:08
 # @File    : coordinator.py
-# @desc    : 协调智能体
+# @desc    : 并行委托协调器智能体
 
-
+import asyncio
 from typing import List
 from utils.logger import logger
 from utils.ChatModel import ChatModel
-from semantic_router.prompts import ROUTE_SYSTEM, ROUTE_USER, COORDINATOR_SYSTEM, COORDINATOR_USER
+from parallel_delegation.prompts import NER_SYSTEM, NER_USER, COORDINATOR_SYSTEM, COORDINATOR_USER
 from utils.message import Message
 
 
@@ -35,101 +35,152 @@ class TravelPlannerAgent:
         logger.info(f"{self.name} initialized with {len(self.sub_agents)} sub-agents.")
 
 
-    def determine_intent(self, query: str) -> str:
+    async def perform_ner(self, query: str) -> dict:
         """
-        确定用户意图，基于查询内容返回确定的用户意图。
+        执行命名实体识别，提取查询中的意图和相关实体。
 
         :param query: 用户输入的查询内容。
-        :return: 确定的用户意图。
+        :return: 包含意图和实体的字典。
         """
-        route_user = ROUTE_USER.format(query=query)
+        ner_user = NER_USER.format(query=query)
         try:
-            logger.info(f"确定意图，查询内容: '{query}'")
+            logger.info(f"执行NER，查询内容: '{query}'")
             result = (
                 self.agent
-                .general(ROUTE_SYSTEM)
-                .input(route_user)
+                .general(NER_SYSTEM)
+                .input(ner_user)
                 .output({
-                    'intent': ("str", "用户查询的意图，如航班搜索、酒店搜索、租车搜索和未知。输出四个意图之一。")
+                    "entities": {
+                        "FLIGHT": {
+                            "duration": ("str", "指定旅行的时长, 未指定返回‘NA’"),
+                            "destination": ("str", "旅行的目的地, 未指定返回‘NA’"),
+                            "date": ("str", "旅行的日期或月份, 未指定返回‘NA’"),
+                            "origin": ("str", "旅行的起点, 未指定返回‘NA’"),
+                            "num_passengers": ("str", "旅行乘客人数, 未指定返回‘NA’")
+                        },
+                        "HOTEL": {
+                            "duration": ("str", "如果有所规定的话，那么停留的时长。未指定返回‘NA’"),
+                            "destination": ("str", "酒店的位置, 未指定返回‘NA’"),
+                            "date": ("str", "停留的日期或月份。未指定返回‘NA’"),
+                            "num_passengers": ("str", "入住人数, 未指定返回‘NA’"),
+                            "hotel_amenities": ("str", "所需的酒店设施（如有具体要求）。多个设施用逗号隔开。未指定返回‘NA’"),
+                        },
+                        "CAR_RENTAL": {
+                            "duration": ("str", "租车的时长, 未指定返回‘NA’"),
+                            "date": ("str", "租车的日期或月份, 未指定返回‘NA’"),
+                            "car_type": ("str", "所需的汽车类型（如SUV、轿车等）。未指定返回‘NA’"),
+                            "pickup_location": ("str", "租车的起点, 未指定返回‘NA’"),
+                            "dropoff_location": ("str", "租车的终点, 未指定返回‘NA’")
+                        }
+                    }
                 })
                 .start()
             )
-            intent_str = result['intent']
-            logger.info(f"确定意图: '{intent_str}'")
-            if intent_str in ["航班搜索", "酒店搜索", "租车搜索", "未知"]:
-                return intent_str
-            else:
-                logger.warning(f"意图 '{intent_str}' 不在预定义范围内，返回未知。")
-                return "未知"
+            logger.info(f"NER结果: {result}")
+            return result
         except Exception as e:
-            logger.error(f"确定意图时出现意外错误: {e}")
-            return "未知"
+            logger.error(f"执行NER时出现意外错误: {e}")
+            return {}
 
-    def route_to_agent(self, intent: str):
+
+    async def route_to_agent(self, entities: dict):
         """
-        根据确定的意图路由到相应的子代理。
-
-        :param intent: 确定的用户意图。
-        :return: 相应子代理的输出。
+        根据识别到的实体路由到相应的子智能体。
+        :param entities: 包含识别到的意图和实体的字典。
+        :return: 子智能体实例。
         """
-        intent_to_agent = {
-            "航班搜索": "FlightSearchAgent",
-            "酒店搜索": "HotelSearchAgent",
-            "租车搜索": "CarRentalSearchAgent",
-            "未知": None
-        }
+        tasks = []
+        for entity_type, entity_values in entities['entities'].items():
+            agent = None
+            if entity_type == "FLIGHT":
+                agent = self.sub_agents.get("FlightSearchAgent")
+            elif entity_type == "HOTEL":
+                agent = self.sub_agents.get("HotelSearchAgent")
+            elif entity_type == "CAR_RENTAL":
+                agent = self.sub_agents.get("CarRentalSearchAgent")
+            if agent:
+                task = asyncio.create_task(self.process_entity(agent, entity_type, entity_values))
+                tasks.append(task)
+        return await asyncio.gather(*tasks)
 
-        agent_name = intent_to_agent.get(intent)
-        if not agent_name:
-            logger.error(f"没有找到有效的智能体: {intent}")
-            return None
-
-        logger.info(f"路由指向智能体: '{agent_name}'")
-        return self.sub_agents.get(agent_name)
-
-    def process(self, message: Message) -> Message:
+    async def process_entity(self, agent, entity_type: str, entity_values: dict) -> Message:
         """
-        处理用户消息，根据确定的意图路由到相应的子智能体，生成综合响应。
+        处理特定实体类型的查询，调用相应的子智能体。
 
-        :param message: 用户消息，包含查询内容和其他相关信息。
-        :return: 综合响应消息。
+        :param agent: 子智能体实例。
+        :param entity_type: 实体类型（如FLIGHT、HOTEL、CAR_RENTAL）。
+        :param entity_values: 实体值字典。
+        :return: 包含响应内容的消息对象。
         """
+        query = f"{entity_type}: {str(entity_values)}"
+        message = Message(content=query, sender=self.name, recipient=agent.name,
+                          metadata={"entity_type": entity_type})
+        return await agent.process(message)
+
+    async def consolidate_responses(self, query: str, sub_responses: List[Message]) -> str:
+        """
+        合并所有子智能体的响应，生成最终的综合响应。
+
+        :param query: 用户原始查询。
+        :param sub_responses: 从子智能体获取的响应列表。
+        :return: 综合后的响应内容。
+        """
+        logger.info("正在为用户生成最终的综合回复。")
+        flight_summary = next((r.content for r in sub_responses if r.metadata["entity_type"] == "FLIGHT"), ""),
+        hotel_summary = next((r.content for r in sub_responses if r.metadata["entity_type"] == "HOTEL"), ""),
+        car_rental_summary = next((r.content for r in sub_responses if r.metadata["entity_type"] == "CAR_RENTAL"), "")
+
+        coordinator_user = COORDINATOR_USER.format(query=query, flight_summary=flight_summary, hotel_summary=hotel_summary, car_rental_summary=car_rental_summary)
+
         try:
-            logger.info(f"{self.name} 处理消息: '{message.content}'")
-            intent = self.determine_intent(message.content)
-
-            sub_agent = self.route_to_agent(intent)
-            if sub_agent is None:
-                raise ValueError(f"未知意图: {intent}")
-
-            sub_message = Message(
-                content=message.content,
-                sender=self.name,
-                recipient=sub_agent.name,
-                metadata={"intent": intent}
-            )
-
-            sub_response = sub_agent.process(sub_message)
-            summary = sub_response.content
-
-            coordinator_system = COORDINATOR_SYSTEM.format(query=message.content, summary=summary)
-            coordinator_user = COORDINATOR_USER.format(query=message.content, summary=summary)
-            final_response_text = (
+            summary = (
                 self.agent
-                .general(coordinator_system)
+                .general(COORDINATOR_SYSTEM)
                 .input(coordinator_user)
                 .output("给出清晰、信息丰富且易于理解的回应")
                 .start()
             )
-            return Message(
-                content=final_response_text,
-                sender=self.name,
-                recipient="User"
-            )
+            return summary.strip()
+        except Exception as e:
+            logger.error(f"合并响应时出现意外错误: {e}")
+            return ""
+
+
+    async def process(self, message: Message) -> Message:
+        """
+        处理用户消息，执行命名实体识别、路由到子智能体、合并响应。
+
+        :param message: 用户消息，包含查询内容和其他相关信息。
+        :return: 综合响应消息。
+        """
+        logger.info(f"{self.name} processing message: {message.content}")
+        try:
+            query = message.content
+
+            # 执行命名实体识别
+            entities = await self.perform_ner(query)
+
+            # 路由到子智能体
+            sub_agent = await self.route_to_agent(entities)
+
+            # 合并响应
+            final_response_text = await self.consolidate_responses(query, sub_agent)
+
+            return Message(content=final_response_text, sender=self.name, recipient="User")
         except Exception as e:
             logger.error(f"处理消息时出现意外错误: {e}")
             return Message(
-                content="抱歉，我无法回答您的问题。",
+                content="在处理您的请求时，我遇到了一个错误。请稍后再试",
                 sender=self.name,
                 recipient="User"
             )
+
+if __name__ == "__main__":
+    async def main():
+        result = await TravelPlannerAgent().perform_ner(
+            "我需要从北京飞到上海，3月15日出发，2个人，还要在上海订一个有游泳池和健身房的酒店住3晚，另外需要租一辆SUV，在浦东机场取车，3天后在虹桥机场还车"
+)
+        print(result)
+
+
+    asyncio.run(main())

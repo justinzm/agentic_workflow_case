@@ -7,12 +7,14 @@
 # @File    : flight_search.py
 # @desc    : 航班查询智能体
 
+
+import asyncio
 from typing import Optional
 from utils.logger import logger
 from utils.message import Message
 from utils.ChatModel import ChatModel
 from web_access.main import WebAccess
-from semantic_router.prompts import FLIGHT_SYSTEM, FLIGHT_USER
+from parallel_delegation.prompts import FLIGHT_SYSTEM, FLIGHT_USER
 
 
 class FlightSearchAgent:
@@ -24,7 +26,7 @@ class FlightSearchAgent:
         agent_factory = ChatModel().get_agent_factory()
         self.agent = agent_factory.create_agent()
 
-    def process(self, message: Message) -> Message:
+    async def process(self, message: Message) -> Message:
         logger.info(f"航班咨询查询: '{message.content}'")
         flight_user = FLIGHT_USER.format(query=message.content)
         try:
@@ -43,19 +45,22 @@ class FlightSearchAgent:
                 return Message(
                     content="处理航班查询时发生错误，请稍后再试。",
                     sender="FlightSearchAgent",
-                    recipient=message.sender
+                    recipient=message.sender,
+                    metadata={"entity_type": "FLIGHT"}
                 )
             logger.info(f"运行web搜索查询: '{web_search_query}'")
-            web_search_results_summary = WebAccess().run(web_search_query)
+            web_search_results_summary = await asyncio.to_thread(WebAccess().run, web_search_query)
             return Message(
                 content=web_search_results_summary,
                 sender="FlightSearchAgent",
-                recipient=message.sender
+                recipient=message.sender,
+                metadata={"entity_type": "FLIGHT"}
             )
         except Exception as e:
             logger.error(f"处理航班查询时发生错误: {e}")
             return Message(
                 content="处理航班查询时发生错误，请稍后再试。",
                 sender="FlightSearchAgent",
-                recipient=message.sender
+                recipient=message.sender,
+                metadata={"entity_type": "FLIGHT"}
             )
