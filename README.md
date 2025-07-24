@@ -609,33 +609,6 @@ DOUBAO_API_KEY=your_doubao_api_key
 SERPAPI_API_KEY=your_serpapi_key
 ```
 
-### 4. 运行案例
-
-```bash
-# 运行反思工作流案例
-cd reflection
-python main.py
-
-# 运行网络搜索工作流案例
-cd web_access
-python main.py
-
-# 运行并行委托工作流案例
-cd parallel_delegation
-python main.py
-
-# 运行语义路由工作流案例
-cd semantic_router
-python main.py
-
-# 运行动态分片工作流案例
-cd dynamic_sharding
-python main.py
-
-# 运行任务分解工作流案例
-cd task_decomposition
-python main.py
-```
 
 ## ⚙️ 环境配置
 
