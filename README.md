@@ -488,7 +488,7 @@ if __name__ == "__main__":
     run_dynamic_sharding_example()
 ```
 
-### 6. �始 Task Decomposition Workflow - 任务分解智能文档处理工作流
+### 6. 🔄 Task Decomposition Workflow - 任务分解智能文档处理工作流
 
 基于任务分解模式的智能文档处理系统，通过协调器和子任务代理的协作，将复杂的文档分析任务分解为多个专门的子任务，并行执行以提高处理效率和准确性。
 
