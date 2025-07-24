@@ -16,7 +16,7 @@ import Agently
 
 class ChatModel:
     # 创建agent
-    def get_agent_factory(self, model_source="gemini"):
+    def get_agent_factory(self, model_source="doubao_deepseek"):
         if model_source == "doubao_deepseek":
             agent_factory = Agently.AgentFactory()
             (
