@@ -514,19 +514,19 @@ if __name__ == "__main__":
 graph TD
     A[文档输入] --> B[CoordinatorAgent<br/>协调器]
     B --> C[任务分解]
-    
+
     C --> D[SubTaskAgent_1<br/>命名实体提取]
     C --> E[SubTaskAgent_2<br/>引用信息提取]
     C --> F[SubTaskAgent_3<br/>数值数据提取]
     C --> G[SubTaskAgent_4<br/>关键术语提取]
     C --> H[SubTaskAgent_5<br/>外部来源提取]
-    
+
     D --> I[并行处理]
     E --> I
     F --> I
     G --> I
     H --> I
-    
+
     I --> J[结果整合]
     J --> K[最终报告输出]
 
@@ -543,7 +543,7 @@ graph TD
 
 **工作流程：**
 
-1. **任务分解**：协调器将文档分析任务分解为5个专门的子任务
+1. **任务分解**：协调器将文档分析任务分解为 5 个专门的子任务
 2. **并行执行**：多个子任务代理同时处理各自领域的信息提取
 3. **专业处理**：每个子任务专注于特定类型的信息提取（实体、引用、数值、术语、来源）
 4. **结果整合**：将所有子任务结果合并为完整的文档分析报告
@@ -556,29 +556,137 @@ from task_decomposition.main import TaskDecomposition
 
 def run_task_decomposition_example():
     """运行任务分解工作流示例"""
-    
+
     async def main():
         # 创建任务分解实例
         task_decomp = TaskDecomposition()
-        
+
         print("开始执行任务分解工作流...")
         print(f"输入文件：{task_decomp.input_file}")
         print(f"输出文件：{task_decomp.output_file}")
-        
+
         try:
             # 执行任务分解流程
             await task_decomp.run()
-            
+
             print("✅ 任务分解工作流执行完成！")
             print(f"结果已保存到：{task_decomp.output_file}")
-            
+
         except Exception as e:
             print(f"❌ 工作流执行失败：{str(e)}")
-    
+
     asyncio.run(main())
 
 if __name__ == "__main__":
     run_task_decomposition_example()
+```
+
+### 7. 🔄 Dynamic Decomposition Workflow - 动态分解智能文档处理工作流
+
+基于动态任务分解模式的智能文档处理系统，通过协调器和子任务代理的协作，使用大型语言模型动态生成专门的子任务，将复杂的文档分析任务智能分解为 10 个独立的并行子任务，以提高处理效率和分析深度。
+
+**核心特性：**
+
+- 动态任务分解机制
+- AI 智能生成子任务
+- 自适应分析策略
+- 深度并行处理优化
+
+**应用场景：**
+
+- 文学作品和小说分析
+- 学术论文和研究报告处理
+- 新闻文章和媒体内容分析
+- 历史文档和档案研究
+
+**详细文档：** [dynamic_decomposition/README.md](dynamic_decomposition/README.md)
+
+#### 工作流程图
+
+```mermaid
+graph TD
+    A[文档输入] --> B[CoordinatorAgent<br/>协调器]
+    B --> C[AI模型动态任务分解]
+
+    C --> D[SubTaskAgent_1<br/>动态任务1]
+    C --> E[SubTaskAgent_2<br/>动态任务2]
+    C --> F[SubTaskAgent_3<br/>动态任务3]
+    C --> G[SubTaskAgent_4<br/>动态任务4]
+    C --> H[SubTaskAgent_5<br/>动态任务5]
+    C --> I[SubTaskAgent_6<br/>动态任务6]
+    C --> J[SubTaskAgent_7<br/>动态任务7]
+    C --> K[SubTaskAgent_8<br/>动态任务8]
+    C --> L[SubTaskAgent_9<br/>动态任务9]
+    C --> M[SubTaskAgent_10<br/>动态任务10]
+
+    D --> N[并行处理]
+    E --> N
+    F --> N
+    G --> N
+    H --> N
+    I --> N
+    J --> N
+    K --> N
+    L --> N
+    M --> N
+
+    N --> O[结果整合]
+    O --> P[最终报告输出]
+
+    style A fill:#e1f5fe
+    style P fill:#c8e6c9
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#e8f5e8
+    style E fill:#e8f5e8
+    style F fill:#e8f5e8
+    style G fill:#e8f5e8
+    style H fill:#e8f5e8
+    style I fill:#e8f5e8
+    style J fill:#e8f5e8
+    style K fill:#e8f5e8
+    style L fill:#e8f5e8
+    style M fill:#e8f5e8
+```
+
+**工作流程：**
+
+1. **动态任务分解**：协调器使用 AI 模型根据文档内容智能生成 10 个最适合的子任务
+2. **并行执行**：10 个动态生成的子任务代理同时处理各自的专门分析任务
+3. **自适应处理**：每个子任务根据文档特点自动调整分析重点和策略
+4. **结果整合**：将所有动态子任务结果合并为完整的文档分析报告
+
+#### 使用示例
+
+```python
+import asyncio
+from dynamic_decomposition.main import DynamicDecomposition
+
+def run_dynamic_decomposition_example():
+    """运行动态分解工作流示例"""
+
+    async def main():
+        # 创建动态分解实例
+        dynamic_decomp = DynamicDecomposition()
+
+        print("开始执行动态分解工作流...")
+        print(f"输入文件：{dynamic_decomp.input_file}")
+        print(f"输出文件：{dynamic_decomp.output_file}")
+
+        try:
+            # 执行动态分解流程
+            await dynamic_decomp.run()
+
+            print("✅ 动态分解工作流执行完成！")
+            print(f"结果已保存到：{dynamic_decomp.output_file}")
+
+        except Exception as e:
+            print(f"❌ 工作流执行失败：{str(e)}")
+
+    asyncio.run(main())
+
+if __name__ == "__main__":
+    run_dynamic_decomposition_example()
 ```
 
 ## 🚀 快速开始
@@ -608,7 +716,6 @@ DOUBAO_API_KEY=your_doubao_api_key
 # 搜索API配置（用于web_access案例）
 SERPAPI_API_KEY=your_serpapi_key
 ```
-
 
 ## ⚙️ 环境配置
 
@@ -686,6 +793,11 @@ agentic_workflow_case/
 │   ├── message.py              # 消息传递结构
 │   └── data/                   # 数据存储目录
 ├── task_decomposition/          # 任务分解工作流案例
+│   ├── README.md               # 案例详细文档
+│   ├── main.py                 # 主程序入口
+│   ├── coordinator.py          # 协调器代理
+│   └── delegates.py            # 子任务代理
+├── dynamic_decomposition/       # 动态分解工作流案例
 │   ├── README.md               # 案例详细文档
 │   ├── main.py                 # 主程序入口
 │   ├── coordinator.py          # 协调器代理

@@ -178,3 +178,8 @@ test/*
 
 */data
 */data/*
+
+/dag_orchestration/
+/dag_orchestration/*
+/dag_orchestration
+dag_orchestration/dag.yml
