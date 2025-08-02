@@ -601,6 +601,107 @@ if __name__ == "__main__":
 
 **详细文档：** [dynamic_decomposition/README.md](dynamic_decomposition/README.md)
 
+### 8. 📊 DAG Orchestration Workflow - DAG编排智能文档处理工作流
+
+基于有向无环图（DAG）的智能文档处理系统，通过协调器和多个专门的智能体协作，按照预定义的依赖关系和执行顺序，自动化处理复杂的文档分析和处理任务。
+
+**核心特性：**
+
+- DAG编排任务调度
+- 智能体协作处理
+- 异步并行执行
+- 动态配置加载
+- 结果自动传递
+
+**应用场景：**
+
+- 复杂文档处理流水线
+- 多阶段数据分析任务
+- 内容生成和编译系统
+- 自动化报告生成
+- 多源信息整合和分析
+
+**详细文档：** [dag_orchestration/README.md](dag_orchestration/README.md)
+
+#### 工作流程图
+
+```mermaid
+graph TD
+    A[YAML配置文件] --> B[CoordinatorAgent<br/>协调器]
+    B --> C[任务依赖解析]
+    
+    C --> D[CollectAgent<br/>文档收集]
+    D --> E[PreprocessAgent<br/>预处理]
+    E --> F[ExtractAgent<br/>信息提取]
+    F --> G[CompileAgent<br/>内容编译]
+    G --> H[SummarizeAgent<br/>总结生成]
+    
+    D --> I[ChatModel<br/>AI模型接口]
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+    
+    I --> J[任务结果存储]
+    J --> K[最终报告输出]
+
+    style A fill:#e1f5fe
+    style K fill:#c8e6c9
+    style B fill:#fff3e0
+    style C fill:#f3e5f5
+    style D fill:#e8f5e8
+    style E fill:#e8f5e8
+    style F fill:#e8f5e8
+    style G fill:#e8f5e8
+    style H fill:#e8f5e8
+```
+
+**工作流程：**
+
+1. **配置加载**：从YAML文件加载DAG定义，解析任务依赖关系
+2. **任务调度**：协调器按依赖顺序执行任务，支持无依赖任务的并行执行
+3. **智能体协作**：5个专门智能体按序处理文档收集、预处理、信息提取、内容编译和总结生成
+4. **结果传递**：上游任务的输出自动作为下游任务的输入，形成完整的处理链
+5. **报告生成**：生成最终的综合分析报告
+
+#### 使用示例
+
+```python
+import asyncio
+from dag_orchestration.main import DagOrchestrationAgent
+
+def run_dag_orchestration_example():
+    """运行DAG编排工作流示例"""
+    
+    async def main():
+        # 创建DAG编排实例
+        dag_agent = DagOrchestrationAgent()
+        
+        print("开始执行DAG编排工作流...")
+        print(f"DAG配置文件：{dag_agent.dag_file_path}")
+        print(f"输出报告文件：{dag_agent.report_file_path}")
+        
+        try:
+            # 执行DAG编排流程
+            await dag_agent.run()
+            
+            print("✅ DAG编排工作流执行完成！")
+            print(f"最终报告已保存到：{dag_agent.report_file_path}")
+            
+            # 读取并显示结果摘要
+            with open(dag_agent.report_file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                print(f"生成报告长度：{len(content)} 字符")
+                
+        except Exception as e:
+            print(f"❌ 工作流执行失败：{str(e)}")
+
+    asyncio.run(main())
+
+if __name__ == "__main__":
+    run_dag_orchestration_example()
+```
+
 #### 工作流程图
 
 ```mermaid
@@ -802,6 +903,16 @@ agentic_workflow_case/
 │   ├── main.py                 # 主程序入口
 │   ├── coordinator.py          # 协调器代理
 │   └── delegates.py            # 子任务代理
+├── dag_orchestration/           # DAG编排工作流案例
+│   ├── README.md               # 案例详细文档
+│   ├── main.py                 # 主程序入口
+│   ├── coordinator.py          # DAG协调器实现
+│   └── agents/                 # 智能体模块目录
+│       ├── collect.py          # 文档收集智能体
+│       ├── preprocess.py       # 预处理智能体
+│       ├── extract.py          # 信息提取智能体
+│       ├── compile.py          # 编译智能体
+│       └── summarize.py        # 总结智能体
 ├── test/                        # 测试文件目录
 └── logs/                        # 日志文件目录
 ```

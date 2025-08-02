@@ -180,7 +180,7 @@ class WebScrapeAgent:
         except Exception as e:
             logger.error(f"保存采集数据错误: {e}")
 
-    def run(self, query: str, location: str = '') -> str:
+    def run(self, query: str, location: str = '') -> None:
         """
         抓取与查询相关的网页内容。
         Args:

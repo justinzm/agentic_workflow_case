@@ -19,8 +19,8 @@ class DynamicDecomposition:
     任务分解模式的主入口，协调任务分解和子任务执行。
     """
     def __init__(self):
-        self.input_file = "doc.txt"
-        self.output_file = "extracted_info.md"
+        self.input_file = "data/doc.txt"
+        self.output_file = "data/extracted_info.md"
 
     async def run(self):
         """

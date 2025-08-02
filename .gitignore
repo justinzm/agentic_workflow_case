@@ -179,7 +179,6 @@ test/*
 */data
 */data/*
 
-/dag_orchestration/
-/dag_orchestration/*
-/dag_orchestration
-dag_orchestration/dag.yml
+/dag_orchestration/data/docs/
+/dag_orchestration/data/docs/*
+/dag_orchestration/data/docs
